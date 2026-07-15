@@ -45,12 +45,32 @@ proxies:
       headers:
         Host: edge.example.com
 
+  # Optional. Keep Reality XHTTP on DIRECT_HOST/source IP unless the selected
+  # CDN is explicitly proven to support the protocol and port.
+  - name: SG-vless-reality-xhttp
+    type: vless
+    server: direct.example.com
+    port: 13581
+    uuid: <VLESS_UUID>
+    network: xhttp
+    tls: true
+    udp: true
+    servername: <REALITY_SERVER_NAME>
+    client-fingerprint: chrome
+    xhttp-opts:
+      path: /<RANDOM_XHTTP_PATH>
+      host: <REALITY_SERVER_NAME>
+    reality-opts:
+      public-key: <REALITY_PUBLIC_KEY>
+      short-id: <REALITY_SHORT_ID>
+
 proxy-groups:
   - name: SG-nodes
     type: select
     proxies:
       - SG-vless-reality-vision
       - SG-vless-ws-tls
+      - SG-vless-reality-xhttp
       - DIRECT
 
 rules:

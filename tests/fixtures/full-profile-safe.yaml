@@ -1,0 +1,18 @@
+mode: rule
+ipv6: false
+mixed-port: 7890
+
+proxy-providers:
+  SG:
+    type: http
+    url: https://edge.example.com/s/clashMeta/PROFILE_TOKEN
+    path: ./providers/sg.yaml
+
+proxy-groups:
+  - name: SG-nodes
+    type: select
+    use:
+      - SG
+
+rules:
+  - MATCH,SG-nodes

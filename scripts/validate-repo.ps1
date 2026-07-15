@@ -19,10 +19,12 @@ $required = @(
     'docs/RUNBOOK.md',
     'docs/CLOUDFLARE.md',
     'docs/CLASH_VERGE.md',
+    'docs/SUBSCRIPTION_CONTRACT.md',
     'docs/TROUBLESHOOTING.md',
     'scripts/preflight-server.sh',
     'scripts/verify-endpoints.ps1',
     'scripts/verify-endpoints.sh',
+    'scripts/repair-clash-xhttp-host.sh',
     'scripts/secret-scan.ps1'
 )
 
@@ -60,10 +62,20 @@ if ($bashPath) {
             throw "Bash syntax validation failed: $($script.Name)"
         }
     }
+    & $bashPath (Join-Path $Root 'tests/test-repair-clash-xhttp-host.sh')
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Rendered subscription repair test failed.'
+    }
+    & $bashPath (Join-Path $Root 'tests/test-verify-endpoints.sh')
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Bash endpoint verification test failed.'
+    }
 } else {
     Write-Warning 'bash was not found; Bash syntax checks were skipped.'
 }
 
 & (Join-Path $Root 'scripts/secret-scan.ps1') -Root $Root
+
+& (Join-Path $Root 'tests/test-verify-endpoints.ps1')
 
 Write-Host 'repo_validation=passed'

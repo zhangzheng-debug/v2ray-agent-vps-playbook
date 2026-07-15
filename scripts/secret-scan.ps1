@@ -24,7 +24,7 @@ function Test-AllowedIpv4 {
     param([string]$Address)
     return $Address -match '^(127\.|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)' -or
         $Address -match '^(192\.0\.2\.|198\.51\.100\.|203\.0\.113\.)' -or
-        $Address -in @('0.0.0.0', '1.1.1.1')
+        $Address -in @('0.0.0.0', '1.1.1.1', '8.8.8.8')
 }
 
 $files = Get-ChildItem -LiteralPath $Root -Recurse -File | Where-Object {
