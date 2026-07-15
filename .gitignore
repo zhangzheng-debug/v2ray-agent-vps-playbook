@@ -1,0 +1,19 @@
+# Local secrets and generated evidence
+.env
+deployment.env
+*.secret
+*.key
+*.pem
+*.p12
+*.pfx
+id_ed25519*
+evidence/
+backups/
+tmp/
+*.log
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

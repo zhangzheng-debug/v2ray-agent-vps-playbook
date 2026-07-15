@@ -1,0 +1,1 @@
+(http.host eq "<EDGE_DOMAIN>" and (http.request.uri.path eq "/s/clashMetaProfiles/<PROFILE_TOKEN>" or http.request.uri.path eq "/s/clashMeta/<PROFILE_TOKEN>"))

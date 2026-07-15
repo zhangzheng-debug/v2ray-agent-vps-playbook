@@ -1,0 +1,57 @@
+# Reference template only. Prefer the profile exported by the current upstream tool.
+# Replace placeholders outside Git; never commit the rendered file.
+
+mixed-port: 7897
+allow-lan: false
+mode: rule
+log-level: info
+ipv6: false
+
+dns:
+  enable: true
+  ipv6: false
+  enhanced-mode: fake-ip
+  nameserver:
+    - https://1.1.1.1/dns-query
+
+proxies:
+  - name: SG-vless-reality-vision
+    type: vless
+    server: direct.example.com
+    port: 24443
+    uuid: <VLESS_UUID>
+    network: tcp
+    tls: true
+    udp: true
+    flow: xtls-rprx-vision
+    servername: <REALITY_SERVER_NAME>
+    client-fingerprint: chrome
+    reality-opts:
+      public-key: <REALITY_PUBLIC_KEY>
+      short-id: <REALITY_SHORT_ID>
+
+  - name: SG-vless-ws-tls
+    type: vless
+    server: edge.example.com
+    port: 443
+    uuid: <VLESS_UUID>
+    network: ws
+    tls: true
+    udp: true
+    servername: edge.example.com
+    client-fingerprint: chrome
+    ws-opts:
+      path: /ws/<RANDOM_WS_PATH>
+      headers:
+        Host: edge.example.com
+
+proxy-groups:
+  - name: SG-nodes
+    type: select
+    proxies:
+      - SG-vless-reality-vision
+      - SG-vless-ws-tls
+      - DIRECT
+
+rules:
+  - MATCH,SG-nodes
