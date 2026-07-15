@@ -26,6 +26,8 @@
 - 切换操作者电脑上的 Clash 节点、系统代理、TUN 或默认路由；
 - 将私钥、密码、Cloudflare Token、订阅 Token、UUID、真实 IP 或账号信息写入仓库；
 - 为了“先通再说”而关闭整个 Cloudflare WAF、关闭 TLS 校验或放行全部 URL；
+- 把 `/s/clashMeta/<TOKEN>` provider URL 当作完整 Clash 配置交给用户；
+- 让 Reality、Reality XHTTP 或其他直连高端口节点使用 Cloudflare Proxied 边缘主机；
 - 未备份就覆盖 Xray、Nginx、防火墙或证书配置；
 - 在验证新线路独立可用前删除旧线路；
 - 把“命令执行成功”当作“部署完成”。
@@ -97,6 +99,7 @@ INPUTS
 3. 可选 VMess WS/TLS：只在客户端兼容性确有需要时增加。
 
 不要为了数量一次打开所有协议。每增加一种协议，就增加一个证书、端口、路由或客户端兼容性故障面。
+如果安装 Reality XHTTP，默认按直连协议处理；只有已证明所用 CDN 明确支持该协议和端口时才能例外。
 
 ### ORIGIN_VALIDATED
 
@@ -122,6 +125,8 @@ INPUTS
 
 - 完整 Clash profile 返回 200，Content-Type/正文是 YAML，不是 HTML；
 - provider 返回 200，包含期望节点名称；
+- 完整 profile 必须有 `mode: rule`、`proxy-groups:` 和 `rules:`；provider 必须是 `proxies:` 列表；
+- 逐个审计 provider 的 `server/port/network/reality-opts`，禁止 Reality/XHTTP 指向 Proxied 主机；
 - 响应头没有 `Cf-Mitigated: challenge`；
 - 错误响应和日志不泄露 Token。
 
@@ -130,6 +135,7 @@ INPUTS
 保持本机当前线路不变，用独立测试客户端、临时容器或第二台设备验证：
 
 - Reality 主节点完成握手、DNS 和 HTTPS 请求；
+- Reality XHTTP 若安装，必须以直连地址单独完成握手和 HTTPS 请求；
 - WS/TLS 备用节点完成握手、DNS 和 HTTPS 请求；
 - 出口 IPv4 显示目标 VPS 的地区和 ASN；
 - IPv6 若禁用，客户端不会从本地 IPv6/QUIC 绕过代理；
@@ -138,6 +144,8 @@ INPUTS
 ### CLIENT_HANDOFF / REBOOT_VALIDATED
 
 - 把订阅 URL 交给用户；用户自己导入并切换。
+- 默认只把 `/s/clashMetaProfiles/<TOKEN>` 标记为“客户端导入链接”；provider URL 单独标注用途。
+- 若全局模式可用而规则模式失败，先检查 profile/规则组/rule-provider/DNS，不重装服务器。
 - 代理必须含明确的 `ipv6: false`（除非 IPv6 已验证）。
 - 用户确认网页、DNS、GitHub/Google/YouTube 等基础站点和 IP 地区。
 - VPS 完整重启后重新执行端点、服务、节点和出口验证。

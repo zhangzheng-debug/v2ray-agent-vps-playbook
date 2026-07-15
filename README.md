@@ -27,6 +27,8 @@ Cloudflare 标识、邮箱或 SSH 私钥。
 Clash / sing-box
   ├─ 主线路：VLESS Reality Vision ── 服务器公网 IP:独立端口
   │                                  （DNS only，不经过 Cloudflare）
+  ├─ 可选直连：VLESS Reality XHTTP ── 服务器公网 IP:独立端口
+  │                                  （不能误用橙云边缘主机）
   └─ 备用线：VLESS WS/TLS ── Cloudflare:443 ── Nginx ── Xray
 
 订阅客户端 ── HTTPS://域名/s/<随机路径> ── Cloudflare:443 ── Nginx
@@ -35,6 +37,9 @@ Clash / sing-box
 关键原则：
 
 - Reality/TCP 等非 HTTP 协议不套 Cloudflare 橙云；WS/TLS 才作为 CDN 备用线路。
+- 客户端直接导入 `/s/clashMetaProfiles/<TOKEN>`；`/s/clashMeta/<TOKEN>` 只是 provider，
+  误导入后常表现为“全局能用、规则不能用”。
+- 每次重新生成订阅后检查最终节点的 `server/port/network`；Reality/XHTTP 不能指向橙云主机。
 - 默认只发布 IPv4；IPv6 从服务器、DNS、Xray 到客户端全部验证后才添加 AAAA。
 - Cloudflare 使用 `Full (strict)`，订阅 WAF 放行必须限制到精确主机和精确随机路径。
 - “订阅能下载”“节点能握手”“出口确实在目标地区”是三个独立验证项。
@@ -48,7 +53,8 @@ Clash / sing-box
 4. 使用 [scripts/preflight-server.sh](scripts/preflight-server.sh) 做只读服务器预检。
 5. 安装前重新核对上游 README 和安装脚本，不把仓库中的示例当成永久不变的命令。
 6. 用 [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md) 配置 DNS、TLS 和精确 WAF 规则。
-7. 用 `verify-endpoints` 从服务器外部验证订阅端点。
+7. 用 `verify-endpoints` 从服务器外部验证订阅形状和节点路由；详见
+   [docs/SUBSCRIPTION_CONTRACT.md](docs/SUBSCRIPTION_CONTRACT.md)。
 8. 用 [docs/CLASH_VERGE.md](docs/CLASH_VERGE.md) 导入，但由用户最后切换节点。
 9. 完成重启复测和 [CHECKLIST.md](CHECKLIST.md) 的交付检查。
 
@@ -59,7 +65,8 @@ Clash / sing-box
 - Xray、Nginx 和证书状态正常，Nginx 配置测试通过；
 - A 记录指向正确源站，AAAA 不存在或已经端到端验证；
 - Cloudflare 代理状态符合每种协议的设计，TLS 为 `Full (strict)`；
-- 无浏览器 Cookie 的外部客户端能以 HTTP 200 下载两个订阅端点；
+- 无浏览器 Cookie 的外部客户端能以 HTTP 200 下载两个订阅端点，且完整 profile/provider 结构互不混淆；
+- 最终 provider 中 Reality/XHTTP 使用直连地址，WS/TLS 使用 Cloudflare 443；
 - 至少一个 Reality 主节点和一个 WS/TLS 备用节点完成真实握手与网页访问；
 - 出口 IP/ASN/地区与目标 VPS 一致，不依赖旧服务器中继；
 - VPS 重启后服务、证书任务、防火墙规则和订阅仍正常；
@@ -72,6 +79,7 @@ Clash / sing-box
 - `START_HERE.md`：下次可直接复制给 Codex 的启动提示词。
 - `docs/RUNBOOK.md`：从零部署的阶段化流程。
 - `docs/TROUBLESHOOTING.md`：按现象定位 DNS、TLS、WAF、协议、IPv6 和客户端问题。
+- `docs/SUBSCRIPTION_CONTRACT.md`：完整 profile/provider 区分、节点路由契约和自动门禁。
 - `docs/LESSONS_LEARNED.md`：本次部署的经验与反模式。
 - `docs/POSTMORTEM-SANITIZED.md`：去敏复盘。
 - `templates/`：环境变量、Nginx、Cloudflare 和 Clash 示例。

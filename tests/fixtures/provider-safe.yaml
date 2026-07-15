@@ -1,0 +1,32 @@
+proxies:
+  - name: SG-vless-reality-vision
+    type: vless
+    server: direct.example.com
+    port: 24443
+    uuid: <VLESS_UUID>
+    network: tcp
+    tls: true
+    reality-opts:
+      public-key: <REALITY_PUBLIC_KEY>
+      short-id: <REALITY_SHORT_ID>
+
+  - name: SG-vless-ws-tls
+    type: vless
+    server: edge.example.com
+    port: 443
+    uuid: <VLESS_UUID>
+    network: ws
+    tls: true
+    ws-opts:
+      path: /ws/<RANDOM_WS_PATH>
+
+  - name: SG-vless-reality-xhttp
+    type: vless
+    server: direct.example.com
+    port: 13581
+    uuid: <VLESS_UUID>
+    network: xhttp
+    tls: true
+    reality-opts:
+      public-key: <REALITY_PUBLIC_KEY>
+      short-id: <REALITY_SHORT_ID>

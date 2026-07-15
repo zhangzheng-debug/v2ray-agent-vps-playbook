@@ -1,0 +1,1 @@
+(http.host eq "<EDGE_DOMAIN>" and (http.request.uri.path eq "/<VLESS_WS_PATH>" or http.request.uri.path eq "/<VMESS_WS_PATH>"))

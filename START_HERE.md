@@ -13,6 +13,13 @@
 4. IPv4 优先，没有端到端验证就不发布 AAAA，并在 Clash 使用 ipv6: false；
 5. 完成源站、Cloudflare、订阅、节点握手、出口地区和 VPS 重启复测。
 
+订阅交付必须遵守：
+- `/s/clashMetaProfiles/<TOKEN>` 才是给 Clash 客户端直接导入的完整规则配置；
+- `/s/clashMeta/<TOKEN>` 只是 provider，不能当作完整配置交给我；
+- 每次生成订阅后审计所有节点的 server/port/network，Reality 和 Reality XHTTP 必须使用
+  DNS only 的直连主机或 VPS IP，不能使用 Cloudflare 橙云主机；
+- 在独立测试内核验证节点时，不得改变我当前 Clash、系统代理或 TUN，并在报告中写清实际验证的节点。
+
 不要把任何秘密写入 Git，不要切换我电脑上的 Clash、系统代理或 TUN。
 如果我还没指定域名，请在 Cloudflare DNS 绑定前暂停让我确认；其他安全、可回滚的
 部署步骤可以自主完成。任何门禁失败都先诊断和回滚，不能跳过，也不能把部分完成说成完成。
