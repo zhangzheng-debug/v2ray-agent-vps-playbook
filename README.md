@@ -42,14 +42,15 @@ Clash / sing-box
 
 ## 执行顺序
 
-1. 阅读 [AGENTS.md](AGENTS.md) 的权限边界和停止点。
-2. 按 [docs/RUNBOOK.md](docs/RUNBOOK.md) 逐阶段部署。
-3. 使用 [scripts/preflight-server.sh](scripts/preflight-server.sh) 做只读服务器预检。
-4. 安装前重新核对上游 README 和安装脚本，不把仓库中的示例当成永久不变的命令。
-5. 用 [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md) 配置 DNS、TLS 和精确 WAF 规则。
-6. 用 `verify-endpoints` 从服务器外部验证订阅端点。
-7. 用 [docs/CLASH_VERGE.md](docs/CLASH_VERGE.md) 导入，但由用户最后切换节点。
-8. 完成重启复测和 [CHECKLIST.md](CHECKLIST.md) 的交付检查。
+1. 从 [START_HERE.md](START_HERE.md) 复制未来部署提示词。
+2. 阅读 [AGENTS.md](AGENTS.md) 的权限边界和停止点。
+3. 按 [docs/RUNBOOK.md](docs/RUNBOOK.md) 逐阶段部署。
+4. 使用 [scripts/preflight-server.sh](scripts/preflight-server.sh) 做只读服务器预检。
+5. 安装前重新核对上游 README 和安装脚本，不把仓库中的示例当成永久不变的命令。
+6. 用 [docs/CLOUDFLARE.md](docs/CLOUDFLARE.md) 配置 DNS、TLS 和精确 WAF 规则。
+7. 用 `verify-endpoints` 从服务器外部验证订阅端点。
+8. 用 [docs/CLASH_VERGE.md](docs/CLASH_VERGE.md) 导入，但由用户最后切换节点。
+9. 完成重启复测和 [CHECKLIST.md](CHECKLIST.md) 的交付检查。
 
 ## 完成定义
 
@@ -68,6 +69,7 @@ Clash / sing-box
 ## 仓库内容
 
 - `AGENTS.md`：未来自动化代理必须遵守的操作契约。
+- `START_HERE.md`：下次可直接复制给 Codex 的启动提示词。
 - `docs/RUNBOOK.md`：从零部署的阶段化流程。
 - `docs/TROUBLESHOOTING.md`：按现象定位 DNS、TLS、WAF、协议、IPv6 和客户端问题。
 - `docs/LESSONS_LEARNED.md`：本次部署的经验与反模式。
